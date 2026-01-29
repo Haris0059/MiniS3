@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini S3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #151a23;
+            color: #eef1f5;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        h1 {
+            font-size: clamp(4rem, 12vw, 9rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .upload-section {
+            width: 100%;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-name {
+            text-align: center;
+            color: #7a8699;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .upload-btn {
+            width: 100%;
+            background-color: #3b82f6;
+            color: #151a23;
+            font-weight: 500;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .upload-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+<h1>Mini S3</h1>
+
+<div class="upload-section">
+    <input type="file" id="fileInput" class="file-input">
+    <p id="fileName" class="file-name"></p>
+    <button id="uploadBtn" class="upload-btn">Select File</button>
+</div>
+
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileName = document.getElementById('fileName');
+    let selectedFile = null;
+
+    uploadBtn.addEventListener('click', () => {
+        if (selectedFile) {
+            // TODO: Call your endpoint here
+            console.log('Uploading file:', selectedFile.name);
+            // Example:
+            // const formData = new FormData();
+            // formData.append('file', selectedFile);
+            // fetch('/your-endpoint', { method: 'POST', body: formData });
+        } else {
+            fileInput.click();
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        selectedFile = e.target.files[0];
+        if (selectedFile) {
+            fileName.textContent = selectedFile.name;
+            uploadBtn.textContent = 'Upload File';
+        }
+    });
+</script>
+</body>
+</html>
