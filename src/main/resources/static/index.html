@@ -87,12 +87,35 @@
 
     uploadBtn.addEventListener('click', () => {
         if (selectedFile) {
-            // TODO: Call your endpoint here
             console.log('Uploading file:', selectedFile.name);
-            // Example:
-            // const formData = new FormData();
-            // formData.append('file', selectedFile);
-            // fetch('/your-endpoint', { method: 'POST', body: formData });
+            uploadBtn.textContent = 'Uploading...'; // Indicate uploading state
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            fetch('/api/v1/files', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Upload failed: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Upload successful:', data);
+                alert('File uploaded successfully!');
+                fileName.textContent = ''; // Clear file name
+                selectedFile = null; // Clear selected file
+                uploadBtn.textContent = 'Select File'; // Reset button text
+                fileInput.value = ''; // Clear file input
+            })
+            .catch(error => {
+                console.error('Error during upload:', error);
+                alert('File upload failed: ' + error.message);
+                uploadBtn.textContent = 'Upload File'; // Reset button text on error
+            });
         } else {
             fileInput.click();
         }
