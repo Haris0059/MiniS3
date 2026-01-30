@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -47,5 +48,10 @@ public class FileStorageServiceImpl implements FileStorageService {
         metadata.setUploadDate(Instant.now());
 
         return repository.save(metadata);
+    }
+
+    @Override
+    public List<FileMetadata> getAllFiles() {
+        return repository.findAll();
     }
 }
