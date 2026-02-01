@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.security.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,4 +21,5 @@ public class FileMetadata {
     private Long size;
     private String contentType;
     private Instant uploadDate;
+    private String tags;
 }
