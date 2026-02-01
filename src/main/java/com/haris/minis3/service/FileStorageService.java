@@ -13,5 +13,9 @@ public interface FileStorageService {
 
     List<FileMetadata> getAllFiles();
 
-    public Resource loadFileAsResource(UUID id);
+    Resource loadFileAsResource(UUID id);
+
+    void deleteFile(UUID id) throws IOException;
+
+    FileMetadata updateFile(UUID id, String originalFilename, String tags);
 }

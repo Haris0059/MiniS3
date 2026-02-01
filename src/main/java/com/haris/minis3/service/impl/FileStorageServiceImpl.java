@@ -73,4 +73,27 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         return resource;
     }
+
+    @Override
+    public void deleteFile(UUID id) throws IOException {
+        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+
+        Path filePath = Paths.get(uploadDir).resolve(metadata.getFilename()).normalize();
+
+        Files.deleteIfExists(filePath);
+        repository.delete(metadata);
+    }
+
+    @Override
+    public FileMetadata updateFile(UUID id, String originalFilename, String tags) {
+        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+
+        if (originalFilename != null) {
+            metadata.setOriginalFilename(originalFilename);
+        } if (tags != null) {
+            metadata.setTags(tags);
+        }
+
+        return repository.save(metadata);
+    }
 }
