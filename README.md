@@ -48,6 +48,32 @@ A lightweight file storage service built with Spring Boot. Upload, download, and
 | Update metadata | `PUT /api/v1/files/{id}` | Update tags/filename |
 | Delete file | `DELETE /api/v1/files/{id}` | Remove file + DB entry |
 
+## API Examples
+
+```bash
+# Upload
+curl -F "file=@image.png" http://localhost:8080/api/v1/files
+
+# List
+curl http://localhost:8080/api/v1/files
+
+# Download
+curl -OJ http://localhost:8080/api/v1/files/{id}
+
+# Update
+curl -X PUT -H "Content-Type: application/json" \
+  -d '{"originalFilename":"new-name.png","tags":"tag1,tag2"}' \
+  http://localhost:8080/api/v1/files/{id}
+
+# Delete
+curl -X DELETE http://localhost:8080/api/v1/files/{id}
+```
+
+**Sample Response (list/upload/update):**
+```json
+{"id":"uuid","originalFilename":"image.png","size":1024,"uploadDate":"2025-01-15T10:30:00Z","tags":"tag1","contentType":"image/png"}
+```
+
 ## Architecture
 
 ```
