@@ -8,6 +8,7 @@ import com.haris.minis3.service.FileStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/v1/files")
+@CrossOrigin
 public class FileController {
 
     private final FileStorageService fileStorageService;
