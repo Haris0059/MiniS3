@@ -1,0 +1,14 @@
+package com.haris.minis3.exception;
+
+import java.util.UUID;
+
+public class FileNotFoundException extends RuntimeException {
+
+    public FileNotFoundException(UUID id) {
+        super("File not found with id: " + id);
+    }
+
+    public FileNotFoundException(String message) {
+        super(message);
+    }
+}
