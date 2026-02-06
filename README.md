@@ -4,9 +4,9 @@ A lightweight file storage service built with Spring Boot. Upload, download, and
 
 ## Features
 
-- File upload/download/delete
+- File upload/download/delete with validation (size & type limits)
 - Metadata storage in database
-- REST API for all operations
+- REST API with pagination support
 - Tags support for file organization
 
 ## Tech Stack
@@ -42,8 +42,8 @@ A lightweight file storage service built with Spring Boot. Upload, download, and
 
 | Operation | Endpoint | Description |
 |-----------|----------|-------------|
-| Upload file | `POST /api/v1/files` | Multipart file upload |
-| List files | `GET /api/v1/files` | Returns metadata list |
+| Upload file | `POST /api/v1/files` | Multipart file upload (returns 201) |
+| List files | `GET /api/v1/files` | Returns paginated metadata list |
 | Download file | `GET /api/v1/files/{id}` | Returns file bytes |
 | Update metadata | `PUT /api/v1/files/{id}` | Update tags/filename |
 | Delete file | `DELETE /api/v1/files/{id}` | Remove file + DB entry |
@@ -54,8 +54,8 @@ A lightweight file storage service built with Spring Boot. Upload, download, and
 # Upload
 curl -F "file=@image.png" http://localhost:8080/api/v1/files
 
-# List
-curl http://localhost:8080/api/v1/files
+# List (with pagination)
+curl "http://localhost:8080/api/v1/files?page=0&size=10"
 
 # Download
 curl -OJ http://localhost:8080/api/v1/files/{id}
