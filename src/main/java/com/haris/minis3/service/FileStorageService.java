@@ -2,6 +2,8 @@ package com.haris.minis3.service;
 
 import com.haris.minis3.entity.FileMetadata;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,7 +13,7 @@ import java.util.UUID;
 public interface FileStorageService {
     FileMetadata storeFile(MultipartFile file) throws IOException;
 
-    List<FileMetadata> getAllFiles();
+    Page<FileMetadata> getAllFiles(Pageable pageable);
 
     Resource loadFileAsResource(UUID id);
 

@@ -6,6 +6,10 @@ import com.haris.minis3.entity.FileMetadata;
 import com.haris.minis3.mapper.FileMetadataMapper;
 import com.haris.minis3.service.FileStorageService;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +40,10 @@ public class FileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FileMetadataDto>> listFiles() {
-        return ResponseEntity.ok(fileStorageService.getAllFiles()
-                .stream()
-                .map(fileMetadataMapper::toDto)
-                .toList());
+    public ResponseEntity<Page<FileMetadataDto>> listFiles(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by("uploadDate").descending());
+
+        return ResponseEntity.ok(fileStorageService.getAllFiles(pageable).map(fileMetadataMapper::toDto));
     }
 
     @GetMapping(path = "/{id}")

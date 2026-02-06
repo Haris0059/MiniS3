@@ -9,6 +9,8 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,8 +67,8 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     @Override
-    public List<FileMetadata> getAllFiles() {
-        return repository.findAll();
+    public Page<FileMetadata> getAllFiles(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @SneakyThrows
