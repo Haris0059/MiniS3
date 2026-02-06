@@ -7,6 +7,7 @@ import com.haris.minis3.mapper.FileMetadataMapper;
 import com.haris.minis3.service.FileStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class FileController {
 
     @PostMapping
     public ResponseEntity<FileMetadataDto> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(fileMetadataMapper.toDto(fileStorageService.storeFile(file)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(fileMetadataMapper.toDto(fileStorageService.storeFile(file)));
     }
 
     @GetMapping
