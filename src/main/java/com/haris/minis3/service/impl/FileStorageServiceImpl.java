@@ -1,6 +1,8 @@
 package com.haris.minis3.service.impl;
 
 import com.haris.minis3.entity.FileMetadata;
+import com.haris.minis3.exception.FileNotFoundException;
+import com.haris.minis3.exception.FileValidationException;
 import com.haris.minis3.repository.FileMetadataRepository;
 import com.haris.minis3.service.FileStorageService;
 import lombok.SneakyThrows;
@@ -27,12 +29,20 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @Value("${file.max-size}")
+    private long maxFileSize;
+
+    @Value("${file.allowed-types}")
+    private List<String> allowedTypes;
+
     public FileStorageServiceImpl(FileMetadataRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public FileMetadata storeFile(MultipartFile file) throws IOException {
+        this.validateFile(file);
+
         Path uploadPath = Paths.get(uploadDir);
 
         if (!Files.exists(uploadPath)) {
@@ -40,6 +50,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
@@ -61,7 +72,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @SneakyThrows
     @Override
     public Resource loadFileAsResource(UUID id) {
-        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new FileNotFoundException(id));
 
         Path filePath = Paths.get(uploadDir).resolve(metadata.getFilename()).normalize();
 
@@ -76,7 +87,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public void deleteFile(UUID id) throws IOException {
-        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new FileNotFoundException(id));
 
         Path filePath = Paths.get(uploadDir).resolve(metadata.getFilename()).normalize();
 
@@ -86,7 +97,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public FileMetadata updateFile(UUID id, String originalFilename, String tags) {
-        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+        FileMetadata metadata = repository.findById(id).orElseThrow(() -> new FileNotFoundException(id));
 
         if (originalFilename != null) {
             metadata.setOriginalFilename(originalFilename);
@@ -95,5 +106,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
 
         return repository.save(metadata);
+    }
+
+    private void validateFile(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new FileValidationException("File is empty");
+        } if (file.getSize() > maxFileSize) {
+            throw new FileValidationException("File size exceeds maximum allowed: " + maxFileSize + " bytes");
+        } if (!allowedTypes.contains(file.getContentType())) {
+            throw new FileValidationException("File type not allowed: " + file.getContentType());
+        }
     }
 }
